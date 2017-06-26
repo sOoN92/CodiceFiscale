@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.persistence.Query;
+
 
 public class GeneraCf extends HttpServlet {
 	
@@ -21,34 +23,39 @@ public class GeneraCf extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if ("delete".equals(req.getParameter("action"))) {
-		String cognome = req.getParameter("cognome");
-		String nome = req.getParameter("nome");
-		String dataNascita = req.getParameter("dataNascita");
-		String comune = req.getParameter("comune");
-		String sesso = req.getParameter("sesso");
-		try{
-			String cf = (String) crud.jpaRead("select cf.codiceFiscale from cF cf where nome=\'"+nome+"\' and cognome=\'"+cognome+"\' and dataNascita=\'"+dataNascita+"\'").getSingleResult();
+		if (!"delete".equals(req.getParameter("action"))) {
+			String cognome = req.getParameter("cognome");
+			String nome = req.getParameter("nome");
+			String dataNascita = req.getParameter("dataNascita");
+			String comune = req.getParameter("comune");
+			String sesso = req.getParameter("sesso");
 			
-			req.setAttribute("cf", cf);
-			req.setAttribute("esiste", "Codice già esistente");
+			try{
+				String cf = (String) crud.jpaRead("select cf.codiceFiscale from CodiceFiscale cf where cf.nome=\'"+nome+"\' and cf.cognome=\'"+cognome+"\' and cf.dataNascita=\'"+dataNascita+"\'").getSingleResult();
+				
+				req.setAttribute("cf", cf);
+				req.setAttribute("esiste", "0");
+				RequestDispatcher requestDispatcherObj = req.getRequestDispatcher("/risultato.jsp");
+				requestDispatcherObj.forward(req, resp);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			CodiceFiscale persona = genera.calcoloCodiceFiscale(cognome, nome, dataNascita, comune, sesso);
+			crud.jpaCreate(persona);
+			crud.jpaUpdate(persona);
+			
+			req.setAttribute("cf", persona.getCodiceFiscale());
+			
+			
 			RequestDispatcher requestDispatcherObj = req.getRequestDispatcher("/risultato.jsp");
 			requestDispatcherObj.forward(req, resp);
-		}catch (Exception e) {
-			
-		}
-		CodiceFiscale persona = genera.calcoloCodiceFiscale(cognome, nome, dataNascita, comune, sesso);
-		crud.jpaCreate(persona);
-		crud.jpaUpdate(persona);
-		crud.closeLogicaJPA();
-		
-		req.setAttribute("cf", persona.getCodiceFiscale());
-		
-		
-		RequestDispatcher requestDispatcherObj = req.getRequestDispatcher("/risultato.jsp");
-		requestDispatcherObj.forward(req, resp);
 		} else {
-			
+			String cf = req.getParameter("cf");
+			CodiceFiscale persona = (CodiceFiscale) crud.jpaRead("select cf from CodiceFiscale cf where cf.codiceFiscale=\'"+cf+"\'").getSingleResult();
+			crud.jpaDelete(persona);
+			Query query = crud.jpaRead("Delete from CodiceFiscale cf where cf.codiceFiscale=\'"+cf+"\'");
+			crud.jpaDelete(query);
+			crud.jpaUpdate(persona);
 		}
 	
 	}

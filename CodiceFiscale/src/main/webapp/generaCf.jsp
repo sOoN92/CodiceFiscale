@@ -10,15 +10,15 @@
  
  <form action="CodiceFiscale" method="post">
 
-  <p>Cognome:</p><br />
+  <p>Cognome:</p>
   	<input type="text" name="cognome"><br />
-  <p>Nome:</p><br />
+  <p>Nome:</p>
   	<input type="text" name="nome"><br />
-  <p>Data di Nascita</p><br />
+  <p>Data di Nascita:</p>
   	<input type="text" name="dataNascita"><br />
-  <p>Comune di Nascita</p><br />
+  <p>Comune di Nascita:</p>
  	<input type="text" name="comune"><br />
-
+<p>Sesso:</p>
   <select name="sesso">
    <option value="M">M</option>
    <option value="F">F</option>

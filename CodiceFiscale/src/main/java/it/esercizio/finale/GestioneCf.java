@@ -9,6 +9,8 @@ public class GestioneCf {
 
 	public CodiceFiscale calcoloCodiceFiscale(String cognomecf,String nomecf,String dataNascitacf,String comuneNascitacf,String sesso) {
 		String codFis = "";
+		cognomecf = cognomecf.replace(" ", "");
+		nomecf = nomecf.replace(" ", "");
 		cognomecf = cognomecf.toUpperCase();
 		nomecf = nomecf.toUpperCase();
 		
@@ -149,7 +151,7 @@ public class GestioneCf {
 		   codFis += "X123";
 	   }
 	   
-	   
+	   /*CARATTERE DI CONTROLLO*/
 		int sommaPari = 0;
 		for (int i = 1; i <= 13; i += 2) {
 			switch (codFis.charAt(i)) {
@@ -301,7 +303,7 @@ public class GestioneCf {
 		}
 		
 		int sommaDispari = 0;
-		for (int i = 0; i < 14; i += 2) {
+		for (int i = 0; i < 15; i += 2) {
 			switch (codFis.charAt(i)) {
 			case '0': {
 				sommaDispari += 1;
