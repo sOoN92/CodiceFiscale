@@ -53,8 +53,6 @@ public class GeneraCf extends HttpServlet {
 			String cf = req.getParameter("cf");
 			CodiceFiscale persona = (CodiceFiscale) crud.jpaRead("select cf from CodiceFiscale cf where cf.codiceFiscale=\'"+cf+"\'").getSingleResult();
 			crud.jpaDelete(persona);
-			crud.jpaRead("Delete from CodiceFiscale cf where cf.codiceFiscale=\'"+cf+"\'");
-			crud.jpaUpdate(persona);
 		}
 	
 	}
