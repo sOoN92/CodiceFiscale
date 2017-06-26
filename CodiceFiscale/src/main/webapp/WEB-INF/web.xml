@@ -5,8 +5,8 @@
 
 	<display-name>CodiceFiscale</display-name>
 	<servlet>
-		<servlet-name>ComboBox</servlet-name>
-		<servlet-class>it.esercizio.finale.</servlet-class>
+		<servlet-name>CodiceFiscale</servlet-name>
+		<servlet-class>it.esercizio.finale.GeneraCf</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

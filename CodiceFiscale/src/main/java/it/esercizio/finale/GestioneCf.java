@@ -7,7 +7,7 @@ public class GestioneCf {
 	ServicesCrud crud = new ServicesCrud("generateCF");
 	CodiceFiscale codiceFiscale = new CodiceFiscale();
 
-	private CodiceFiscale calcoloCodiceFiscale(String cognomecf,String nomecf,String dataNascitacf,String comuneNascitacf,String sesso) {
+	public CodiceFiscale calcoloCodiceFiscale(String cognomecf,String nomecf,String dataNascitacf,String comuneNascitacf,String sesso) {
 		String codFis = "";
 		cognomecf = cognomecf.toUpperCase();
 		nomecf = nomecf.toUpperCase();
@@ -125,17 +125,15 @@ public class GestioneCf {
 			break;
 		}
 		}
+		
 		/* giorno */
-		int giorno = 0;
-		if (dataNascitacf.charAt(0) == '0')
-			giorno = Integer.parseInt(dataNascitacf.substring(0, 1));
-		else
-			giorno = Integer.parseInt(dataNascitacf.substring(0, 2));
+		String giorno ="";
+		giorno = dataNascitacf.substring(0, 2);
 		if (sesso.equals("M"))
 			codFis += giorno;
 		else {
 			giorno += 40;
-			codFis += Integer.toString(giorno);
+			codFis += giorno;
 		}
 		
 		/* comune nascita */
@@ -144,15 +142,14 @@ public class GestioneCf {
 	    comuneNascitacf = comuneNascitacf.substring(0, 1).toUpperCase() + comuneNascitacf.substring(1).toLowerCase();
 	   
 	   
-	   String codReg = (String) crud.jpaRead("select cf.CodFisco from comuni cf where cf.comune="+comuneNascitacf).getSingleResult();
+	   String codReg = (String) crud.jpaRead("select cf.codFisco from Comuni cf where cf.comune=\'"+comuneNascitacf+"\'").getSingleResult();
 	   if(codReg != null){
 	    codFis += codReg;
 	   } else {
-		   codFis += "XXX";
+		   codFis += "X123";
 	   }
 	   
 	   
-		/* Carattere di controllo */
 		int sommaPari = 0;
 		for (int i = 1; i <= 13; i += 2) {
 			switch (codFis.charAt(i)) {
@@ -302,8 +299,9 @@ public class GestioneCf {
 			}
 			}
 		}
+		
 		int sommaDispari = 0;
-		for (int i = 0; i <= 14; i += 2) {
+		for (int i = 0; i < 14; i += 2) {
 			switch (codFis.charAt(i)) {
 			case '0': {
 				sommaDispari += 1;
@@ -566,7 +564,7 @@ public class GestioneCf {
 		codiceFiscale.setDataNascita(dataNascitacf);
 		codiceFiscale.setNome(nomecf);
 		codiceFiscale.setSesso(sesso);
-
+				
 		return codiceFiscale;
 	}
 }
